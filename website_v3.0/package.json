@@ -1,0 +1,16 @@
+{
+  "name": "travelbuddy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@material/fab": "^14.0.0",
+    "@material/textfield": "^14.0.0",
+    "@material/typography": "^14.0.0"
+  }
+}
