@@ -176,5 +176,7 @@ def registernew1():
     return render_template('mainindex.html', msg=msg)
 
 
+
+
 if __name__ == '__main__':
     app.run()
