@@ -15,7 +15,7 @@
 <body>
     <div class="wrapper">
 
-            <form action="/rides.html" method="post" class="mdc-card mdc-card--outlined main-form">
+            <form action="{{ url_for('registernew1') }}" method="post" class="mdc-card mdc-card--outlined main-form">
                 <h1>Post a Ride</h1>
 
                 <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label">
@@ -53,9 +53,19 @@
                       <span class="mdc-notched-outline__leading"></span>
                       <span class="mdc-notched-outline__trailing"></span>
                     </span>
-                    <input id="nops" name="nops"class="mdc-text-field__input" id="passengers" type="# of Passengers" placeholder="# of Passengers" aria-label="# of Passengers" required>
+                    <input id="nops" name="nops"class="mdc-text-field__input" id="passengers" type="No of Passengers" placeholder="No of Passengers" aria-label="No of Passengers" required>
                   </label>
            
+                  <br />
+
+                  <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label">
+                    <span class="mdc-notched-outline">
+                      <span class="mdc-notched-outline__leading"></span>
+                      <span class="mdc-notched-outline__trailing"></span>
+                    </span>
+                    <input id="t" name="t"class="mdc-text-field__input" id="time" type="Time for the ride" placeholder="Time for the ride" aria-label="Time for the ride" required>
+                  </label>
+
                   <br />
 
                   <button type="submit" value="submit" class="mdc-button foo-button">
