@@ -1,0 +1,15 @@
+@use "@material/fab";
+@include fab.core-styles;
+
+body {
+    font-family: 'Roboto';
+}
+
+.wrapper {
+    padding: 50px;
+    position: relative;
+ }
+
+ .main-form{
+    padding: 50px;
+ }
