@@ -7,13 +7,13 @@ from time import time
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
+import json
+from flask_jsonpify import jsonpify
 import re
 
 
 app = Flask(__name__)
 
-
-#app.secret_key = 'your secret key'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -46,7 +46,11 @@ def login():
             if account['Type'] == 'driver':
                 return render_template('post_ride.html', msg=msg)
             if account['Type'] == 'passenger':
-                return render_template('rides.html', msg=msg)
+                cursor = mysql.connection.cursor()
+                cursor.execute("""SELECT * FROM rides; """)
+                data=cursor.fetchall()
+                print(data)
+                return render_template('rides.html', data=data,msg=msg)
         else:
             msg = 'Incorrect username / password !'
     return render_template('mainindex.html', msg=msg)
@@ -136,10 +140,16 @@ def registernew():
             cursor.execute('INSERT INTO signup_driver VALUES (NULL, % s, % s, % s, NULL, NULL, NULL, % s, % s, % s, % s)',
                            (name, email, password, Age, Gender, pn, 'passenger'))
             mysql.connection.commit()
+            cursor = mysql.connection.cursor()
+            cursor.execute("""SELECT * FROM rides; """)
+            data=cursor.fetchall()
+            print(data)
             msg = 'You have successfully registered !'
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
-    return render_template('rides.html', msg=msg)
+    print(msg)
+    return render_template('rides.html', data=data,msg=msg)
+
 
 
 @app.route('/registernew1', methods=['GET', 'POST'])
@@ -174,6 +184,9 @@ def registernew1():
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
     return render_template('mainindex.html', msg=msg)
+
+    return response
+
 
 
 
