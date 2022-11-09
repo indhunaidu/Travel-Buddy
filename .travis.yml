@@ -1,0 +1,8 @@
+language: python
+python:
+  - "3.10"
+install:
+  - pip install requests
+
+script:
+  - cd website_v3.0 && python -m app.py
