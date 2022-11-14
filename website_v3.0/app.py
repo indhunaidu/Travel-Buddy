@@ -29,6 +29,7 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     msg = ''
+    value=''
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form:
         email = request.form['email']
         password = request.form['password']
@@ -42,7 +43,10 @@ def login():
             #session['email'] = account['email']
             msg = 'Logged in successfully !'
             if account['Type'] == 'driver':
-                return render_template('post_ride.html', msg=msg)
+                #value=account['idsignup driver']
+                value=int(value)
+
+                return render_template('post_ride.html', msg=msg,value=value)
             if account['Type'] == 'passenger':
                 cursor = mysql.connection.cursor()
                 cursor.execute("""SELECT * FROM rides; """)
@@ -65,6 +69,7 @@ def logout():
 @app.route('/post_ride', methods=['GET', 'POST'])
 def register():
     msg = ''
+    value=''
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form and 'confirmpassword' in request.form and 'fullname' in request.form and 'cmp' in request.form and 'in' in request.form and 'dl' in request.form and 'age' in request.form and 'pn' in request.form and 'gender' in request.form:
         email = request.form['email']
         password = request.form['password']
@@ -101,13 +106,23 @@ def register():
                            (name, email, password, inumber, dl, cmp, Age, Gender, pn, 'driver'))
             mysql.connection.commit()
             msg = 'You have successfully registered !'
+            cursor.execute(
+            'SELECT * FROM signup_driver WHERE Email = % s', (email, ))
+            account = cursor.fetchone()
+            if account:
+                value=account['idsignup driver']
+                value=int(value)
+
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
-    return render_template('post_ride.html', msg=msg)
+    return render_template('post_ride.html', msg=msg,value=value)
 
 
 @app.route('/rides', methods=['GET', 'POST'])
 def registernew():
+    isSelected = -1
+    def selectMethod(index):
+        isSelected =index
     msg = ''
     if request.method == 'POST' and 'email' in request.form and 'password' in request.form and 'confirmpassword' in request.form and 'fullname' in request.form and 'age' in request.form and 'pn' in request.form and 'gender' in request.form:
         email = request.form['email']
@@ -146,19 +161,24 @@ def registernew():
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
     print(msg)
-    return render_template('rides.html', data=data,msg=msg)
+    return render_template('rides.html', data=data,msg=msg,selectMethod = selectMethod)
 
 
 
 @app.route('/registernew1', methods=['GET', 'POST'])
 def registernew1():
     msg = ''
+    print('I am inside this fucntion')
     if request.method == 'POST' and 'origin' in request.form and 'destination' in request.form and 'date' in request.form and 'nops' in request.form and 't' in request.form:
+        print('I am storing the values ')
         origin = request.form['origin']
         destination = request.form['destination']
+        print(destination)
         d = request.form['date']
         nops = request.form['nops']
         t = request.form['t']
+        id= request.form['driverid']
+        print(id)
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
         if not re.match(r'[A-Za-z0-9]+', origin):
@@ -175,16 +195,39 @@ def registernew1():
         elif not origin or not destination or not d or not nops or not t:
             msg = 'Please fill out the form !'
         else:
-            cursor.execute('INSERT INTO rides VALUES (NULL, % s, % s, % s, % s, % s,NULL)',
-                           (nops, origin, destination, t, d))
+            cursor.execute('INSERT INTO rides VALUES ( % s, % s, % s, % s, % s,NULL, % s,NULL)',
+                           (nops, origin, destination, t, d, id))
             mysql.connection.commit()
             msg = 'You have successfully posted a ride !'
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
     return render_template('mainindex.html', msg=msg)
 
-    return response
 
+
+@app.route('/passenger_ride_details.html',methods=['GET', 'POST'])
+def passenger_ride_details():
+    value=request.form['check']
+    driver_acc=''
+    print(value)
+    #value=int(value)
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute(
+        'SELECT * FROM rides WHERE idrides = % s ', (value,))
+    account = cursor.fetchone()
+    print('Fetched account')
+    print(account)
+    if account:
+        driver_id=account['driver_id']
+        print(driver_id)
+        cursor.execute(
+        'SELECT Fulll_Name , Car_Number_Plate FROM signup_driver WHERE idsignup_driver = % s ', (driver_id,))
+        driver_acc=cursor.fetchone()
+        print(driver_acc)
+        print('Trying to merge two tuples')
+        account.update(driver_acc)
+        print(account)
+    return render_template('passenger_ride_details.html',details=account)
 
 
 
