@@ -19,6 +19,7 @@
 
             <form action="{{ url_for('registernew1') }}" method="post" class="mdc-card mdc-card--outlined main-form">
                 <h1>Post a Ride</h1>
+                <input type="text" id="driverid" name="driverid" value="{{value}}"hidden> 
 
                 <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label">
                     <span class="mdc-notched-outline">
@@ -69,6 +70,12 @@
                   </label>
 
                   <br />
+                  <div class="join-button">
+                    <button class="mdc-fab mdc-fab--extended" aria-label="Favorite">
+                        <div class="mdc-fab__ripple"></div>
+                        POST
+                      </button>
+                </div>
 
                   
                                  
