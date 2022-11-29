@@ -8,9 +8,13 @@ Travel Buddy lets users to sign in / sign up as a passenger or a driver. The app
 
 ## Getting Started
 
+* Clone the project using the command 
+
+``` git clone https://github.com/indhunaidu/Travel-Buddy.git```
+
 ### Dependencies
 
-To start the project in your local Import the following in app.py file in the project
+Go to website_v3.0 folder, Open app.py file.Import the following in app.py file in the project.
 
 ``` pip install flask```
 
@@ -25,7 +29,6 @@ To start the project in your local Import the following in app.py file in the pr
 * import MySQLdb.cursors  
 * import re  
 
-
 Step 2  
 Download the XAMPP and install it on the System  
 (XAMPP is a completely free install Apache distribution containing MariaDB, PHP, and Perl.)  
@@ -36,11 +39,8 @@ Open Browser and Write http://localhost/phpmyadmin to check if the XAMPP is work
 
 ### Executing program
 
+* Go to website_v3.0 folder, Open app.py file. Run the file or use the following command:
 
-* Clone the project using the command 
-``` git clone https://github.com/indhunaidu/Travel-Buddy.git```
-
-* Go to website_v3.0 folder, Open app.py file. Run the file or use the following command
 ``` flask run```
 
 
