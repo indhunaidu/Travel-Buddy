@@ -1,6 +1,7 @@
 # Travel-Buddy
-#Requirements
-import email
+#Requirements  
+
+import email  
 from sqlite3 import Time
 from telnetlib import NOP
 from time import time
