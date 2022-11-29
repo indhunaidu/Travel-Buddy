@@ -8,7 +8,7 @@ from time import time
 from flask import Flask, render_template, request, redirect, url_for, session  
 from flask_mysqldb import MySQL  
 import MySQLdb.cursors  
-import re 
+import re  
 Step 2  
 Download the XAMPP and install it on the System  
 (XAMPP is a completely free install Apache distribution containing MariaDB, PHP, and Perl.)  
