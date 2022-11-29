@@ -1,4 +1,5 @@
-# Travel-Buddy
+# Travel-Buddy  
+Import the following to run the code  
 #Requirements  
 import email  
 from sqlite3 import Time  
