@@ -9,4 +9,4 @@ install:
 # run in the command prompt. So, Travis is claiming that the build failed but it is not able to detect the file
 # that is being referenced in the script command.
 script:
-  - python -m unittest 
+  - python -m website_v3.0 
