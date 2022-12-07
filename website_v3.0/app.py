@@ -10,13 +10,14 @@ import MySQLdb.cursors
 import re
 
 
-app = Flask(__name__)
+app = Flask(__name__,template_folder="templates")
+app.secret_key = "super secret key"
 
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'travelbuddy'
+app.config['MYSQL_HOST'] = 'us-cdbr-east-06.cleardb.net'
+app.config['MYSQL_USER'] = 'bc279df3029781'
+app.config['MYSQL_PASSWORD'] = '7f08a29b'
+app.config['MYSQL_DB'] = 'heroku_bc4970188a23d8b'
 
 mysql = MySQL(app)
 
