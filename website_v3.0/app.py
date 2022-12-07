@@ -43,16 +43,18 @@ def login():
             #session['email'] = account['email']
             msg = 'Logged in successfully !'
             if account['Type'] == 'driver':
-                #value=account['idsignup driver']
+                value=account['idsignup_driver']
                 value=int(value)
 
                 return render_template('post_ride.html', msg=msg,value=value)
             if account['Type'] == 'passenger':
+                value=account['idsignup_driver']
+                value=int(value)
                 cursor = mysql.connection.cursor()
-                cursor.execute("""SELECT * FROM rides; """)
+                cursor.execute("""SELECT * FROM rides WHERE Seat_Available > 0; """)
                 data=cursor.fetchall()
                 print(data)
-                return render_template('rides.html', data=data,msg=msg)
+                return render_template('rides.html', data=data,msg=msg,value=value)
         else:
             msg = 'Incorrect username / password !'
     return render_template('mainindex.html', msg=msg)
@@ -110,7 +112,7 @@ def register():
             'SELECT * FROM signup_driver WHERE Email = % s', (email, ))
             account = cursor.fetchone()
             if account:
-                value=account['idsignup driver']
+                value=account['idsignup_driver']
                 value=int(value)
 
     elif request.method == 'POST':
@@ -154,7 +156,7 @@ def registernew():
                            (name, email, password, Age, Gender, pn, 'passenger'))
             mysql.connection.commit()
             cursor = mysql.connection.cursor()
-            cursor.execute("""SELECT * FROM rides; """)
+            cursor.execute("""SELECT * FROM rides WHERE Seat_Available > 0; """)
             data=cursor.fetchall()
             print(data)
             msg = 'You have successfully registered !'
@@ -201,32 +203,78 @@ def registernew1():
             msg = 'You have successfully posted a ride !'
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
-    return render_template('mainindex.html', msg=msg)
+    cursor.execute(' select idrides FROM rides WHERE driver_id = % s ',(id,))
+        
+    value=cursor.fetchall()
+    print(value)
+    #rides = {}
+    p=[]
+
+    for i in value:
+        print(i['idrides'])
+        cursor.execute('select pass_id,ride_id FROM details WHERE ride_id = % s ',(i['idrides'],))
+        passid_details=cursor.fetchall()
+
+        for j in passid_details:
+            print("Inside the Loop")
+            print(j)
+            cursor.execute('select FULLL_Name,pnumber,idsignup_driver FROM signup_driver WHERE idsignup_driver = % s ',(j['pass_id'],))
+            print("Printing Output")
+            finaloutput=cursor.fetchone()
+            finaloutput.update(j)
+            cursor.execute(' select Route_Origin,Route_destination,Time,date FROM rides WHERE idrides = % s ',(j['ride_id'],))
+            d=cursor.fetchone()
+            finaloutput.update(d)
+
+            p.append(finaloutput)
+            print(p)
+
+    
+    print(p)
+    print("Printing each item")
+    return render_template('driver_details.html', msg=msg, value=p)
 
 
 
 @app.route('/passenger_ride_details.html',methods=['GET', 'POST'])
 def passenger_ride_details():
     value=request.form['check']
+    passid=request.form['passid']
     driver_acc=''
     print(value)
+    print(passid)
     #value=int(value)
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute(
         'SELECT * FROM rides WHERE idrides = % s ', (value,))
     account = cursor.fetchone()
     print('Fetched account')
+    rideid=account['idrides']
+    Seat=int (account['Seat_Available'])
     print(account)
     if account:
         driver_id=account['driver_id']
-        print(driver_id)
+        #print(driver_id)
         cursor.execute(
         'SELECT Fulll_Name , Car_Number_Plate FROM signup_driver WHERE idsignup_driver = % s ', (driver_id,))
         driver_acc=cursor.fetchone()
         print(driver_acc)
-        print('Trying to merge two tuples')
+        #print('Trying to merge two tuples')
         account.update(driver_acc)
-        print(account)
+        #print(account)
+        cursor.execute('SELECT * From signup_driver WHERE idsignup_driver = % s',(passid,))
+        pass_account=cursor.fetchone()
+        print(pass_account)
+        cursor.execute('INSERT INTO details VALUES ( NULL, % s, % s)',(passid,rideid,))
+
+        mysql.connection.commit()
+        #cursor.execute('select Seat_Available FROM rides WHERE idrides = rideid')
+        #Seat=cursor.fetchone()
+        print(Seat)
+        cursor.execute('UPDATE rides SET Seat_Available = % s WHERE idrides = % s',((Seat - 1),rideid,))
+        mysql.connection.commit()
+
+
     return render_template('passenger_ride_details.html',details=account)
 
 
